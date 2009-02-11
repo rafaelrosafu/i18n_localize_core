@@ -1,7 +1,265 @@
-i18n_localize_core==================
-Description goes here.
+= i18n_localize_core
 
-COPYRIGHT
-=========
+= Introduction
 
-Copyright (c) 2008 Rafael Rosa Fu. See LICENSE for details.
+  I18n is very very cool, but Ruby doesn't know it exists, which makes parsing 
+  localized strings a little difficult.
+  
+  With i18n_localize_core you can make regular Date and String objects abide by
+  the formatting rules configured in your localization files, without any extra
+  code.
+
+== Installation
+
+=== As a plugin
+
+  <pre>
+  ./script/plugin install git://github.com/rafaelrosafu/i18n_localize_core.git
+  </pre>
+
+=== As a gem
+
+  sudo gem install rafaelrosafu-i18n_localize_core
+  
+  Make sure you have GitHub as a gem source. You can check this out using:
+
+  <pre>
+  gem sources
+  </pre>
+  
+  If you need to add it, just use:
+  
+  <pre>
+  gem sources -a http://gems.github.com
+  </pre>
+
+== Configuration
+
+  You need to activate the code by explicitly adding this line to your
+  *config/environment.rb*:
+
+  <pre>
+  I18n.localize_core = true
+  </pre>
+  
+  This way you won't have any surprises, the code will only be applied when it's
+  activated, giving you the choice to use it or not.
+  
+
+= The code
+
+  Let's assume you have 2 locales, say default (:en) and *Brazil* (:pt-br). These
+  are the relevant formatting rules by each one:
+  
+  <pre>
+  # config/locale/en.yml
+  en:
+    date:
+      formats:
+        default: "%Y-%m-%d"
+    number:
+      format:
+        separator: '.'
+        delimiter: ','
+  </pre>
+
+  <pre>
+  # config/locale/pt-br.yml
+  pt-br:
+    date:
+      formats:
+        default: "%d/%m/%Y"
+    number:
+      format:
+        separator: ','
+        delimiter: '.'
+  </pre>
+  
+  With i18n_localize_core you can do operations like these:
+
+=== Converting dates
+
+  Using the new *I18n.parse_date* method, it will only allow the conversion
+  of valid date formats according to your I18n configuration
+  
+  <pre>
+  >> I18n.locale = :en
+  => :en
+  >> date_var = I18n.parse_date "2009-02-20"
+  => Fri, 20 Feb 2009
+  >> date_var.class
+  => Date
+  
+  >> I18n.locale = :'pt-br'
+  => :'pt-br'
+  >> date_var = I18n.parse_date "2009-02-20"
+  => nil
+  >> date_var = I18n.parse_date "20/02/2009"
+  => Fri, 20 Feb 2009
+  >> date_var.class
+  => Date
+  </pre>
+  
+  But you can use the *Date.parse* method to parse both standard dates
+  and now it will recognize the localized format, *if* the default conversion
+  doesn't work:
+
+  <pre>
+  >> I18n.locale = :en
+  => :en
+  >> date_var = Date.parse "2009-02-20"
+  => Fri, 20 Feb 2009
+  >> date_var = Date.parse "20/02/2009"
+  => ArgumentError: invalid date
+  
+  >> I18n.locale = :'pt-br'
+  => :'pt-br'
+  >> date_var = Date.parse "2009-02-20"
+  => Fri, 20 Feb 2009
+  >> date_var = Date.parse "20/02/2009"
+  => Fri, 20 Feb 2009
+  </pre>
+
+=== Converting numbers
+
+  Number strings can be converted without trouble now:
+  
+  <pre>
+  >> I18n.localize_core = false
+  => false
+  >> I18n.locale = :en
+  => :en
+
+  >> string_var = "123.45"
+  => "123.45"
+  >> number_var = string_var.to_f
+  => 123.45
+  >> number_var.class
+  => Float
+  >> string_var = "98,123.45"
+  => "98,123.45"
+  >> number_var = string_var.to_f
+  => 98.0
+
+  >> I18n.localize_core = true
+  => true
+  >> number_var = string_var.to_f
+  => 98123.45
+  
+  >> I18n.locale = :'pt-br'
+  => :'pt-br'
+  >> number_var = string_var.to_f
+  => 98.12345
+  >> string_var = "98.123,45"
+  => "98.123,45"
+  >> number_var = string_var.to_f
+  => 98123.45
+  </pre>
+  
+  The same works for *string_var.to_i*, except by the fact that it would give
+  us *Fixnum* objects.
+
+=== Even with ActiveRecord
+
+  Let's assume you have a *Person* ActiveRecord object, with the following
+  attributes:
+  * Person
+  ** name
+  ** birthday
+  ** commits
+  ** salary
+
+  Without i18n_localize_core if we try to do something like this, well get an
+  object with some empty fields and weird values:
+  
+  <pre>
+  >> I18n.localize_core = false
+  => false
+  >> I18n.locale = :'pt-br'
+  => :'pt-br'
+  >> person = Person.new({"name" => "Jonh", "birthday" => "20/01/1980", "commits" => "2.129", "salary" => "4.934,24"})
+  => <#Person id: nil, name: "John", birthday: nil, commits: 2, salary: 4.934 >
+  </pre>
+  
+  But turning i18n_localize_core on we can be happy again:
+  <pre>
+  >> I18n.localize_core = true
+  => true
+  >> person = Person.new({"name" => "Jonh", "birthday" => "20/01/1980", "commits" => "2.129", "salary" => "4.934,24"})
+  => <#Person id: nil, name: "John", birthday: 1980-01-20, commits: 2129, salary: 4.934,24 >
+  </pre>
+  
+  This kind of ActiveRecord object construction is what we get in actions like
+  create.
+  
+= API
+
+== New class methods and properties added to I18n
+
+=== localize_core
+  Turns i18n_localize_core functions on and off.
+
+=== thousand_separator
+  Gets and caches the thousand separator marker from the translations using the
+  value under the key 'number.format.delimiter'.
+
+=== decimal_separator
+  Gets and caches the thousand separator marker from the translations using the
+  value under the key 'number.format.separator'.
+
+=== parse_date(string)
+  Parses the string as a *Date* using the locale format. Returns *nil* if it doesn't work.
+
+=== parse_number(string)
+  Parses the string as a *Float* using the locale format. Returns 0.0 if it doesn't work.
+  
+== New instance methods added to the String class
+
+=== as_convertable_number
+  Returns a copy of the string with its thousand separator changed to "_" and the
+  decimal to ".", so we can convert it with Ruby
+
+=== to_f(localize=nil)
+  Converts the string to a *Float*. If no parameter is passed it uses de
+  I18n.localize_core to know if it should localize the value or not. If the parameter
+  is true, it will always try to localize and if it's false, it will not try.
+
+=== to_i(localize=nil)
+  Converts the string to a *Fixnum*. If no parameter is passed it uses de
+  I18n.localize_core to know if it should localize the value or not. If the parameter
+  is true, it will always try to localize and if it's false, it will not try.
+
+= End notes
+
+== Warning
+
+  i18n_localize_core relies heavily on some skaky interfaces from I18n. It was
+  developed and tested with I18n version 0.0.1 under Ruby 1.8.7 patchlevel 72 and
+  Rails 2.2.2, so be carefull if you're using other versions.
+  
+  Another thing you should notice is that converting values from string to numbers
+  will be formated with the current locale, so you can have weird values if you
+  don't be carefull.
+  
+  The code work only on String to Date or Numeric tipes, so don't worry when your
+  not making string convertions. (At least I didn't have any problem)
+
+== Feedback and contributions
+
+  If you have a problem with it, drop me an e-mail and I'll do my best to help out.
+
+  If you're using it and think it's usefull, drop me an e-mail :)
+
+  And, of course, contribute with code if you want :)
+
+== Credits
+
+  Written by Rafael Rosa (www.rafaelrosafu.com) with contributions from
+  Fernando Luizão (fernandoluizao.wordpress.com).
+  
+  Thanks to Fabio Akita (www.akitaonrails.com) for post explaining how to create
+  gems.
+
+== Copyright
+
+Copyright (c) 2008 Rafael Rosa Fu, released under the MIT license
