@@ -2,14 +2,14 @@
 
 Gem::Specification.new do |s|
   s.name = %q{i18n_localize_core}
-  s.version = "0.0.0"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Rafael Rosa Fu"]
   s.date = %q{2009-02-11}
   s.description = %q{TODO}
   s.email = %q{rafaelrosafu@gmail.com}
-  s.files = ["VERSION.yml", "lib/i18n_localize_core.rb", "lib/i18n_localize_core", "lib/i18n_localize_core/date_extensions.rb", "lib/i18n_localize_core/string_extensions.rb", "lib/i18n_localize_core/i18n_extensions.rb", "test/i18n_localize_core_test.rb", "test/test_helper.rb"]
+  s.files = ["README.rdoc", "VERSION.yml", "lib/i18n_localize_core.rb", "lib/i18n_localize_core", "lib/i18n_localize_core/date_extensions.rb", "lib/i18n_localize_core/string_extensions.rb", "lib/i18n_localize_core/i18n_extensions.rb", "test/i18n_localize_core_test.rb", "test/test_helper.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/rafaelrosafu/i18n_localize_core}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]

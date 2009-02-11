@@ -13,9 +13,9 @@
 
 === As a plugin
 
-  <pre>
+  ------------------------------------------------------------------------------
   ./script/plugin install git://github.com/rafaelrosafu/i18n_localize_core.git
-  </pre>
+  ------------------------------------------------------------------------------
 
 === As a gem
 
@@ -23,24 +23,24 @@
   
   Make sure you have GitHub as a gem source. You can check this out using:
 
-  <pre>
+  ------------------------------------------------------------------------------
   gem sources
-  </pre>
+  ------------------------------------------------------------------------------
   
   If you need to add it, just use:
   
-  <pre>
+  ------------------------------------------------------------------------------
   gem sources -a http://gems.github.com
-  </pre>
+  ------------------------------------------------------------------------------
 
 == Configuration
 
   You need to activate the code by explicitly adding this line to your
   *config/environment.rb*:
 
-  <pre>
+  ------------------------------------------------------------------------------
   I18n.localize_core = true
-  </pre>
+  ------------------------------------------------------------------------------
   
   This way you won't have any surprises, the code will only be applied when it's
   activated, giving you the choice to use it or not.
@@ -51,7 +51,7 @@
   Let's assume you have 2 locales, say default (:en) and *Brazil* (:pt-br). These
   are the relevant formatting rules by each one:
   
-  <pre>
+  ------------------------------------------------------------------------------
   # config/locale/en.yml
   en:
     date:
@@ -61,9 +61,9 @@
       format:
         separator: '.'
         delimiter: ','
-  </pre>
+  ------------------------------------------------------------------------------
 
-  <pre>
+  ------------------------------------------------------------------------------
   # config/locale/pt-br.yml
   pt-br:
     date:
@@ -73,7 +73,7 @@
       format:
         separator: ','
         delimiter: '.'
-  </pre>
+  ------------------------------------------------------------------------------
   
   With i18n_localize_core you can do operations like these:
 
@@ -82,7 +82,7 @@
   Using the new *I18n.parse_date* method, it will only allow the conversion
   of valid date formats according to your I18n configuration
   
-  <pre>
+  ------------------------------------------------------------------------------
   >> I18n.locale = :en
   => :en
   >> date_var = I18n.parse_date "2009-02-20"
@@ -98,13 +98,13 @@
   => Fri, 20 Feb 2009
   >> date_var.class
   => Date
-  </pre>
+  ------------------------------------------------------------------------------
   
   But you can use the *Date.parse* method to parse both standard dates
   and now it will recognize the localized format, *if* the default conversion
   doesn't work:
 
-  <pre>
+  ------------------------------------------------------------------------------
   >> I18n.locale = :en
   => :en
   >> date_var = Date.parse "2009-02-20"
@@ -118,13 +118,13 @@
   => Fri, 20 Feb 2009
   >> date_var = Date.parse "20/02/2009"
   => Fri, 20 Feb 2009
-  </pre>
+  ------------------------------------------------------------------------------
 
 === Converting numbers
 
   Number strings can be converted without trouble now:
   
-  <pre>
+  ------------------------------------------------------------------------------
   >> I18n.localize_core = false
   => false
   >> I18n.locale = :en
@@ -154,7 +154,7 @@
   => "98.123,45"
   >> number_var = string_var.to_f
   => 98123.45
-  </pre>
+  ------------------------------------------------------------------------------
   
   The same works for *string_var.to_i*, except by the fact that it would give
   us *Fixnum* objects.
@@ -172,22 +172,22 @@
   Without i18n_localize_core if we try to do something like this, well get an
   object with some empty fields and weird values:
   
-  <pre>
+  ------------------------------------------------------------------------------
   >> I18n.localize_core = false
   => false
   >> I18n.locale = :'pt-br'
   => :'pt-br'
   >> person = Person.new({"name" => "Jonh", "birthday" => "20/01/1980", "commits" => "2.129", "salary" => "4.934,24"})
   => <#Person id: nil, name: "John", birthday: nil, commits: 2, salary: 4.934 >
-  </pre>
+  ------------------------------------------------------------------------------
   
   But turning i18n_localize_core on we can be happy again:
-  <pre>
+  ------------------------------------------------------------------------------
   >> I18n.localize_core = true
   => true
   >> person = Person.new({"name" => "Jonh", "birthday" => "20/01/1980", "commits" => "2.129", "salary" => "4.934,24"})
   => <#Person id: nil, name: "John", birthday: 1980-01-20, commits: 2129, salary: 4.934,24 >
-  </pre>
+  ------------------------------------------------------------------------------
   
   This kind of ActiveRecord object construction is what we get in actions like
   create.
@@ -235,11 +235,11 @@
 
   i18n_localize_core relies heavily on some skaky interfaces from I18n. It was
   developed and tested with I18n version 0.0.1 under Ruby 1.8.7 patchlevel 72 and
-  Rails 2.2.2, so be carefull if you're using other versions.
+  Rails 2.2.2, so be careful if you're using other versions.
   
   Another thing you should notice is that converting values from string to numbers
   will be formated with the current locale, so you can have weird values if you
-  don't be carefull.
+  don't be careful.
   
   The code work only on String to Date or Numeric tipes, so don't worry when your
   not making string convertions. (At least I didn't have any problem)
@@ -248,7 +248,7 @@
 
   If you have a problem with it, drop me an e-mail and I'll do my best to help out.
 
-  If you're using it and think it's usefull, drop me an e-mail :)
+  If you're using it and think it's useful, drop me an e-mail :)
 
   And, of course, contribute with code if you want :)
 
