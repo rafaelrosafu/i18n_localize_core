@@ -13,9 +13,7 @@
 
 === As a plugin
 
-  ------------------------------------------------------------------------------
   ./script/plugin install git://github.com/rafaelrosafu/i18n_localize_core.git
-  ------------------------------------------------------------------------------
 
 === As a gem
 
@@ -215,7 +213,7 @@
   
 == New instance methods added to the String class
 
-=== as_convertable_number
+=== as_delocalized_number
   Returns a copy of the string with its thousand separator changed to "_" and the
   decimal to ".", so we can convert it with Ruby
 

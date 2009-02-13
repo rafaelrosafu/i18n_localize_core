@@ -41,6 +41,10 @@ class I18nLocalizeCoreAPITest < Test::Unit::TestCase
     assert_respond_to I18n, :lookup_translation
   end
   
+  def test_if_string_has_as_delocalized_number
+    assert_respond_to String.new, :as_delocalized_number
+  end
+  
   def test_should_allow_to_change_default_localize_core
     I18n.localize_core = false
     assert ! I18n.localize_core
