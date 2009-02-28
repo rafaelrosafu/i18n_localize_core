@@ -39,7 +39,7 @@ module I18n
       end
       
       def localize_core
-        (@@localize_core ||= false) == true
+        @@localize_core ||= false
       end
       
       def localize_core=(value)
@@ -54,14 +54,13 @@ module I18n
         @@decimal_separator ||= I18n.translate(:'number.format.separator', :raise => true) rescue nil
       end
       
-      # Busca um chave de tradução dentro do backend do I18n
+      # searches for a translation key in the I18n backend
       def lookup_translation(*keys)
         keys.flatten!
-        # Garante a initialização do backend
+        # guarantee the backend initialization
         I18n.translate "_force_initialization_" unless I18n.backend.initialized?
-        # Acessa a variável @translations usando instance_eval, já que ela não
-        # possui accessor público
-        loaded_translations = backend.instance_eval '@translations'
+        # access the private variable @translations
+        loaded_translations = backend.instance_variable_get '@translations'
         keys.inject(loaded_translations) do |result, k|
           if (x = result[k.to_sym]).nil?
             return {}
@@ -78,17 +77,12 @@ module I18n
         end
         
         def _parse_date(target, format_key)
-          # Busca o formato de tradução no backend
+          # search for the format
           format = I18n.lookup_translation(I18n.locale, format_key)
-          result = nil
-          # Só continua se achou um formato válido
-          if (format.is_a? String) and (not format.empty?) then
-            begin
-              result = Date.strptime(target, format)
-            rescue
-            end
+          # continues only if the format is valid
+          if (format.is_a? String) and (not format.empty?)
+            Date.strptime(target, format) rescue nil
           end
-          result
         end
     end
   end
