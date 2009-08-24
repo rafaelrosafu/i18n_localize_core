@@ -8,15 +8,18 @@ class String
   end
 
   alias original_to_f to_f
-  def to_f(localize = nil)
-    localize = I18n.localize_core if localize.nil?
-    (localize ? as_delocalized_number : self).original_to_f
+  def to_f(localized = false)
+    (localized ? as_delocalized_number : self).original_to_f
   end
 
   alias original_to_i to_i
-  def to_i(localize = nil)
-    localize = I18n.localize_core if localize.nil?
-    (localize ? as_delocalized_number : self).original_to_i
+  def to_i(base_or_localized = false, localized = false)
+    if base_or_localized.is_a?(Integer)
+      base =  base_or_localized
+    else
+      base = 10
+      localized = base_or_localized
+    end
+    (localized ? as_delocalized_number : self).original_to_i(base)
   end
 end
-

@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.date = %q{2009-02-13}
   s.description = %q{TODO}
   s.email = %q{rafaelrosafu@gmail.com}
-  s.files = ["README.rdoc", "VERSION.yml", "lib/i18n_localize_core.rb", "lib/i18n_localize_core", "lib/i18n_localize_core/date_extensions.rb", "lib/i18n_localize_core/string_extensions.rb", "lib/i18n_localize_core/i18n_extensions.rb", "test/core_test.rb", "test/i18n_parse_date_test.rb", "test/string_class_test.rb", "test/api_test.rb", "test/i18n_parse_number_test.rb", "test/string_class_to_i_test.rb", "test/date_class_test.rb", "test/test_helper.rb", "test/string_class_to_f_test.rb"]
+  s.files = ["README.rdoc", "VERSION.yml", "lib/i18n_localize_core.rb", "lib/i18n_localize_core", "lib/i18n_localize_core/date_extensions.rb", "lib/i18n_localize_core/string_extensions.rb", "lib/i18n_localize_core/i18n_extensions.rb", "lib/i18n_localize_core/number_extensions.rb", "test/core_test.rb", "test/i18n_parse_date_test.rb", "test/string_class_test.rb", "test/api_test.rb", "test/i18n_parse_number_test.rb", "test/string_class_to_i_test.rb", "test/date_class_test.rb", "test/test_helper.rb", "test/string_class_to_f_test.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/rafaelrosafu/i18n_localize_core}
   s.rdoc_options = ["--inline-source", "--charset=UTF-8"]

@@ -38,12 +38,24 @@ module I18n
         target.to_f true
       end
 
+      def localize_number(target)
+        raise ::ArgumentError unless target.is_a? Numeric
+        result = target.original_to_s.dup
+        result.gsub!(',', I18n.thousand_separator) if I18n.thousand_separator
+        result.gsub!('.', I18n.decimal_separator) if I18n.decimal_separator
+        result
+      end
+
       def localize_core
         @@localize_core ||= false
       end
 
       def localize_core=(value)
         @@localize_core = value
+      end
+
+      def localized_core?
+        I18n.localize_core || false
       end
 
       def thousand_separator
